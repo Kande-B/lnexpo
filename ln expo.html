@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonctions exponentielles & Logarithme décimal – Terminale Bac Pro MELEC</title>
+
+    <!-- MathJax pour les formules -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Desmos -->
+    <script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+    <style>
+        body {
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 20px;
+            color: #111;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #c2185b;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            background: #303f9f;
+            color: white;
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            margin: 60px 0 30px 0;
+        }
+
+        h3 {
+            color: #d81b60;
+            margin-top: 2.5em;
+            font-size: 1.9em;
+        }
+
+        .definition,
+        .explication,
+        .propriete,
+        .exemple {
+            padding: 28px;
+            margin: 35px 0;
+            border-radius: 15px;
+            font-size: 1.32em;
+        }
+
+        .definition {
+            background: #e3f2fd;
+            border-left: 14px solid #1976d2;
+        }
+
+        .explication {
+            background: #fffde7;
+            border-left: 12px solid #fbc02d;
+        }
+
+        .propriete {
+            background: #f3e5f5;
+            border-left: 12px solid #7b1fa2;
+        }
+
+        .exemple {
+            background: #e8f5e9;
+            border-left: 14px solid #388e3c;
+        }
+
+        .desmos {
+            height: 520px;
+            border: 9px solid #e91e63;
+            border-radius: 18px;
+            margin: 45px 0;
+            background: white;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .resume {
+            background: #ffebee;
+            padding: 30px;
+            border-radius: 15px;
+            border: 6px solid #c2185b;
+            margin: 60px 0;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        /* Style du chat IA */
+        #chat-section {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #1976d2;
+        }
+
+        #chat {
+            border: 1px solid #ddd;
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .message {
+            margin: 12px 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+        }
+
+        .user {
+            background: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .assistant {
+            background: #f0f9ff;
+            margin-right: auto;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #question {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.05em;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Fonctions exponentielles<br>et Logarithme décimal</h1>
+
+        <p style="text-align:center; font-size:1.8em; color:#444; margin:40px 0;">
+            Terminale Bac Pro MELEC – Niveau accessible
+        </p>
+
+        <!-- ==================================================================== -->
+        <h2>1. Les fonctions exponentielles</h2>
+
+        <div class="definition">
+            <strong>Définition :</strong><br><br>
+            Une fonction exponentielle de base \( q \) s'écrit :<br>
+            $$ f(x) = q^x \quad \text{avec} \quad q > 0 \quad \text{et} \quad q \neq 1 $$
+        </div>
+
+        <div class="explication">
+            <strong>Explication très simple :</strong><br><br>
+            C'est une fonction où la valeur est multipliée par \( q \) à chaque fois que \( x \) augmente d'une
+            unité.<br>
+            • Si \( q > 1 \) → la courbe monte très vite (croissance explosive)<br>
+            • Si \( 0 < q < 1 \) → la courbe descend très vite au début puis de moins en moins (décroissance)<br><br>
+                On utilise ça pour : intérêts composés, décharge de condensateur, radioactivité, population de
+                bactéries...
+        </div>
+
+        <div class="propriete">
+            <strong>Les règles importantes (propriétés opératoires) :</strong><br><br>
+            1. \( q^{x+y} = q^x \cdot q^y \) <br>
+            2. \( q^{x-y} = \dfrac{q^x}{q^y} \) <br>
+            3. \( q^{kx} = (q^x)^k \) <br>
+            4. \( q^0 = 1 \) <br>
+            5. \( q^{-x} = \dfrac{1}{q^x} \)
+        </div>
+
+        <h3>Exemples très concrets</h3>
+
+        <div class="exemple">
+            <strong>Exemple 1 – Épargne</strong><br><br>
+            Tu places 300 € à 4 % par an → \( q = 1.04 \)<br>
+            Montant après \( x \) années : $$ M(x) = 300 \times 1.04^x $$<br><br>
+            • 1 an : 312 €<br>
+            • 5 ans : ≈ 365 €<br>
+            • 15 ans : ≈ 540 € → ça augmente de plus en plus vite
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 2 – Condensateur (électricité)</strong><br><br>
+            Tension qui diminue : $$ U(t) = 24 \times 0.82^t $$ (t en secondes)<br><br>
+            • t=0 : 24 V<br>
+            • t=1 s : ≈ 19,7 V<br>
+            • t=5 s : ≈ 9,8 V<br>
+            • t=10 s : ≈ 4,8 V
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 3 – Bactéries</strong><br><br>
+            80 bactéries doublent toutes les heures → \( q = 2 \)<br>
+            $$ N(t) = 80 \times 2^t $$<br><br>
+            • 0 h : 80<br>
+            • 2 h : 320<br>
+            • 5 h : 2560 → explosion !
+        </div>
+
+        <div class="desmos" id="graphExp"></div>
+
+        <!-- ==================================================================== -->
+        <h2>2. Le logarithme décimal</h2>
+
+        <div class="definition">
+            <strong>Définition :</strong><br><br>
+            $$ y = \log_{10} x \quad \text{ou simplement} \quad \log x $$
+            <br><br>
+            Cela veut dire : $$ 10^y = x $$
+            <br><br>
+            Seulement défini pour \( x > 0 \).
+        </div>
+
+        <div class="explication">
+            <strong>Explication très simple :</strong><br><br>
+            Le logarithme répond à la question : <br>
+            « Combien de fois faut-il multiplier 10 pour obtenir ce nombre ? »<br><br>
+            C'est l'opération inverse de l'exponentielle de base 10.<br>
+            Exemple : \( \log 1000 = 3 \) parce que \( 10 \times 10 \times 10 = 1000 \)
+        </div>
+
+        <div class="propriete">
+            <strong>Règles très importantes :</strong><br><br>
+            1. \( \log(a \times b) = \log a + \log b \)<br>
+            2. \( \log\left(\dfrac{a}{b}\right) = \log a - \log b \)<br>
+            3. \( \log(a^k) = k \cdot \log a \)<br>
+            4. \( \log 1 = 0 \quad \log 10 = 1 \quad \log 100 = 2 \quad \log 1000 = 3 \)<br>
+            5. \( \log 0.1 = -1 \quad \log 0.01 = -2 \)
+        </div>
+
+        <h3>Exemples très concrets</h3>
+
+        <div class="exemple">
+            <strong>Exemple 1 – Valeurs de base</strong><br><br>
+            • \( \log 1 = 0 \)<br>
+            • \( \log 10 = 1 \)<br>
+            • \( \log 100000 = 5 \)<br>
+            • \( \log 0.001 = -3 \)
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 2 – Décibels (électricité / son)</strong><br><br>
+            Gain en dB = $$ 10 \times \log_{10} \left( \dfrac{P_\text{sortie}}{P_\text{entrée}} \right) $$<br><br>
+            • Puissance × 10 → +10 dB<br>
+            • Puissance × 100 → +20 dB<br>
+            • Puissance × 1000 → +30 dB
+        </div>
+
+        <div class="desmos" id="graphLog"></div>
+
+        <!-- ==================================================================== -->
+        <h2>3. Résolution d'équations</h2>
+
+        <div class="explication">
+            <strong>Comment on résout ?</strong><br><br>
+            On utilise souvent la calculatrice ou le logarithme pour trouver l'exposant inconnu.
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 1 – q^x = a</strong><br><br>
+            \( 3^x = 243 \)<br>
+            \( x = \dfrac{\log 243}{\log 3} = 5 \)
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 2 – log x = k</strong><br><br>
+            \( \log x = 2.7 \)<br>
+            \( x = 10^{2.7} \approx 501 \)
+        </div>
+
+        <div class="exemple">
+            <strong>Exemple 3 – Problème réel (condensateur)</strong><br><br>
+            \( U(t) = 20 \times 0.9^t \)<br>
+            Quand U = 5 V ?<br>
+            \( 0.9^t = 0.25 \)<br>
+            \( t = \dfrac{\log 0.25}{\log 0.9} \approx 13.4 \) secondes
+        </div>
+
+        <div class="desmos" id="graphResolution"></div>
+
+        <div class="resume">
+            <strong>À retenir absolument :</strong><br><br>
+            • Exponentielle \( q^x \) : multiplication répétée par q<br>
+            • Logarithme : « combien de fois 10 ? »<br>
+            • Inverse : si \( y = 10^x \) alors \( x = \log y \)<br>
+            • Pour résoudre \( q^x = a \) → \( x = \dfrac{\log a}{\log q} \)
+        </div>
+
+    </div>
+
+    <!-- ============================================== -->
+    <!-- CHAT IA GEMINI - TOUT EN BAS -->
+    <div class="container" id="chat-section">
+        <h2>Poser ta question à l'IA</h2>
+        <p style="text-align:center; color:#555; margin-bottom: 20px;">
+            Demande tout ce que tu veux sur les exponentielles, le logarithme, les condensateurs, les circuits...
+        </p>
+
+        <div id="chat"></div>
+
+        <div class="input-area">
+            <input type="text" id="question" placeholder="Exemple : Comment résoudre 3^x = 81 ?">
+            <button onclick="envoyerQuestion()">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        // ==============================================
+        // CHAT GEMINI – VERSION CORRIGÉE JANVIER 2026
+        // ==============================================
+        const API_KEY = "AIzaSyCZzE83FNpZbKCEl0Uu5JCzbZjuI_jl_UY";
+        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+
+        function ajouterMessage(texte, type) {
+            const chat = document.getElementById("chat");
+            const div = document.createElement("div");
+            div.className = `message ${type}`;
+            div.innerHTML = texte.replace(/\n/g, "<br>");
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        async function envoyerQuestion() {
+            const input = document.getElementById("question");
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            ajouterMessage(question, "user");
+            input.value = "";
+
+            ajouterMessage("L'IA réfléchit...", "assistant");
+
+            try {
+                const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Tu es un prof très patient et pédagogue pour élèves de Terminale Bac Pro MELEC (niveau faible). 
+                        Explique toujours très simplement, avec des mots faciles, des exemples concrets et sans termes trop compliqués.
+                        Question de l'élève : ${question}`
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.7,
+                            maxOutputTokens: 1024
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Erreur ${response.status} : ${errorText}`);
+                }
+
+                const data = await response.json();
+                const reponse = data.candidates[0].content.parts[0].text;
+
+                document.getElementById("chat").lastChild.remove();
+                ajouterMessage(reponse, "assistant");
+
+            } catch (error) {
+                document.getElementById("chat").lastChild.remove();
+                ajouterMessage(
+                    `Désolé, il y a eu un problème : ${error.message}<br><br>` +
+                    `Essaie de recharger la page ou vérifie ta connexion.<br>` +
+                    `(Erreur détaillée : ${error})`,
+                    "assistant"
+                );
+            }
+        }
+
+        // Envoi avec Entrée
+        document.getElementById("question").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") envoyerQuestion();
+        });
+        // ==============================================
+        // DESMOS (inchangé)
+        // ==============================================
+        const calc1 = Desmos.GraphingCalculator(document.getElementById('graphExp'), { expressions: true, expressionsTopbar: true });
+        calc1.setExpression({ id: 'q2', latex: '2^{x}', color: '#e91e63' });
+        calc1.setExpression({ id: 'q1_4', latex: '1.4^{x}', color: '#2196f3' });
+        calc1.setExpression({ id: 'q08', latex: '0.8^{x}', color: '#4caf50' });
+
+        const calc2 = Desmos.GraphingCalculator(document.getElementById('graphLog'));
+        calc2.setExpression({ id: 'log', latex: '\\log_{10}(x)', color: '#673ab7', lineWidth: 4 });
+        calc2.setExpression({ id: 'exp10', latex: '10^{x}', color: '#009688', lineWidth: 4 });
+        calc2.setExpression({ id: 'sym', latex: 'y=x', color: '#555', lineStyle: Desmos.Styles.DASHED });
+
+        const calc3 = Desmos.GraphingCalculator(document.getElementById('graphResolution'));
+        calc3.setExpression({ id: 'f', latex: '0.9^{x}', color: '#f44336' });
+        calc3.setExpression({ id: 'h', latex: '5/20', color: '#ff9800' });
+        calc3.setExpression({ id: 'pt', latex: '(13.4, 0.25)', showLabel: true, label: '≈ 13,4 s' });
+
+    </script>
+
+</body>
+
+</html>
