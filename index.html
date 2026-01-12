@@ -343,77 +343,77 @@
     </div>
 
     <script>
-        // ==============================================
-        // CHAT GEMINI – VERSION CORRIGÉE JANVIER 2026
-        // ==============================================
-        const API_KEY = "AIzaSyCZzE83FNpZbKCEl0Uu5JCzbZjuI_jl_UY";
-        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+       // ==============================================
+// CHAT GEMINI – VERSION FONCTIONNELLE JANVIER 2026
+// ==============================================
+const API_KEY = "AIzaSyCZzE83FNpZbKCEl0Uu5JCzbZjuI_jl_UY";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent";
 
-        function ajouterMessage(texte, type) {
-            const chat = document.getElementById("chat");
-            const div = document.createElement("div");
-            div.className = `message ${type}`;
-            div.innerHTML = texte.replace(/\n/g, "<br>");
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-        }
+function ajouterMessage(texte, type) {
+    const chat = document.getElementById("chat");
+    const div = document.createElement("div");
+    div.className = `message ${type}`;
+    div.innerHTML = texte.replace(/\n/g, "<br>");
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
 
-        async function envoyerQuestion() {
-            const input = document.getElementById("question");
-            const question = input.value.trim();
+async function envoyerQuestion() {
+    const input = document.getElementById("question");
+    const question = input.value.trim();
+    
+    if (!question) return;
 
-            if (!question) return;
+    ajouterMessage(question, "user");
+    input.value = "";
 
-            ajouterMessage(question, "user");
-            input.value = "";
+    ajouterMessage("L'IA réfléchit...", "assistant");
 
-            ajouterMessage("L'IA réfléchit...", "assistant");
-
-            try {
-                const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `Tu es un prof très patient et pédagogue pour élèves de Terminale Bac Pro MELEC (niveau faible). 
+    try {
+        const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: `Tu es un prof très patient et pédagogue pour élèves de Terminale Bac Pro MELEC (niveau faible). 
                         Explique toujours très simplement, avec des mots faciles, des exemples concrets et sans termes trop compliqués.
                         Question de l'élève : ${question}`
-                            }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.7,
-                            maxOutputTokens: 1024
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Erreur ${response.status} : ${errorText}`);
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1024
                 }
+            })
+        });
 
-                const data = await response.json();
-                const reponse = data.candidates[0].content.parts[0].text;
-
-                document.getElementById("chat").lastChild.remove();
-                ajouterMessage(reponse, "assistant");
-
-            } catch (error) {
-                document.getElementById("chat").lastChild.remove();
-                ajouterMessage(
-                    `Désolé, il y a eu un problème : ${error.message}<br><br>` +
-                    `Essaie de recharger la page ou vérifie ta connexion.<br>` +
-                    `(Erreur détaillée : ${error})`,
-                    "assistant"
-                );
-            }
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erreur ${response.status} : ${errorText || 'Réponse vide'}`);
         }
 
-        // Envoi avec Entrée
-        document.getElementById("question").addEventListener("keypress", function (e) {
-            if (e.key === "Enter") envoyerQuestion();
-        });
+        const data = await response.json();
+        const reponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse reçue";
+
+        document.getElementById("chat").lastChild.remove();
+        ajouterMessage(reponse, "assistant");
+
+    } catch (error) {
+        document.getElementById("chat").lastChild.remove();
+        ajouterMessage(
+            `Désolé, il y a eu un problème : ${error.message}<br><br>` +
+            `Essaie de recharger la page ou vérifie ta connexion.<br>` +
+            `(Détails : ${error})`, 
+            "assistant"
+        );
+    }
+}
+
+// Envoi avec la touche Entrée
+document.getElementById("question").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") envoyerQuestion();
+});
         // ==============================================
         // DESMOS (inchangé)
         // ==============================================
@@ -438,3 +438,4 @@
 
 
 </html>
+
