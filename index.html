@@ -344,10 +344,10 @@
 
     <script>
        // ==============================================
-// CHAT GEMINI – VERSION FONCTIONNELLE JANVIER 2026
+// CHAT GEMINI – VERSION FONCTIONNELLE JANVIER 2026 
 // ==============================================
 const API_KEY = "AIzaSyCZzE83FNpZbKCEl0Uu5JCzbZjuI_jl_UY";
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent";
+const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";  // ← Modèle actuel stable
 
 function ajouterMessage(texte, type) {
     const chat = document.getElementById("chat");
@@ -438,4 +438,5 @@ document.getElementById("question").addEventListener("keypress", function(e) {
 
 
 </html>
+
 
