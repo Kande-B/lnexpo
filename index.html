@@ -10,6 +10,9 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+    <!-- Marked.js pour Markdown + maths dans le chat -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- Desmos -->
     <script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
 
@@ -103,7 +106,7 @@
             font-size: 1.5em;
         }
 
-        /* Style du chat IA */
+        /* Chat IA */
         #chat-section {
             margin-top: 80px;
             padding: 30px;
@@ -164,6 +167,23 @@
 
         button:hover {
             background: #1565c0;
+        }
+
+        /* NumWorks style */
+        #numworks-section {
+            margin-top: 80px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #00695c;
+        }
+
+        #numworks-iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -327,11 +347,11 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- CHAT IA GEMINI - TOUT EN BAS -->
+    <!-- CHAT GROQ - TOUT EN BAS -->
     <div class="container" id="chat-section">
-        <h2>Poser ta question à l'IA</h2>
+        <h2>Poser ta question à l'IA (Groq)</h2>
         <p style="text-align:center; color:#555; margin-bottom: 20px;">
-            Demande tout ce que tu veux sur les exponentielles, le logarithme, les condensateurs, les circuits...
+            Demande tout ce que tu veux sur les exponentielles, logarithme, condensateurs, circuits...
         </p>
 
         <div id="chat"></div>
@@ -342,78 +362,102 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- CALCULATRICE NUMWORKS INTERACTIVE – TOUT EN BAS -->
+    <div class="container" id="numworks-section">
+        <h2>Calculatrice NumWorks interactive</h2>
+        <p style="text-align:center; color:#555; margin-bottom: 20px;">
+            Trace des graphiques exponentielles, logarithmes, dérivées, et fais tous les calculs directement ici !
+        </p>
+
+        <!-- Simulateur NumWorks officiel via iframe -->
+        <iframe src="https://www.numworks.com/simulator/embed/" id="numworks-iframe" allowfullscreen>
+        </iframe>
+    </div>
+
     <script>
-       // ==============================================
-// CHAT GEMINI – VERSION FONCTIONNELLE JANVIER 2026 
-// ==============================================
-const API_KEY = "AIzaSyCZzE83FNpZbKCEl0Uu5JCzbZjuI_jl_UY";
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";  // ← Modèle actuel stable
+        // ==============================================
+        // CHAT GROQ – VERSION CORRIGÉE (modèle 3.3)
+        // ==============================================
+        const GROQ_API_KEY = "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";
+        const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-function ajouterMessage(texte, type) {
-    const chat = document.getElementById("chat");
-    const div = document.createElement("div");
-    div.className = `message ${type}`;
-    div.innerHTML = texte.replace(/\n/g, "<br>");
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-}
+        function ajouterMessage(texte, type) {
+            const chat = document.getElementById("chat");
+            const div = document.createElement("div");
+            div.className = `message ${type}`;
 
-async function envoyerQuestion() {
-    const input = document.getElementById("question");
-    const question = input.value.trim();
-    
-    if (!question) return;
+            // Markdown → HTML + MathJax
+            let html = marked.parse(texte);
+            div.innerHTML = html;
 
-    ajouterMessage(question, "user");
-    input.value = "";
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
 
-    ajouterMessage("L'IA réfléchit...", "assistant");
-
-    try {
-        const response = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `Tu es un prof très patient et pédagogue pour élèves de Terminale Bac Pro MELEC (niveau faible). 
-                        Explique toujours très simplement, avec des mots faciles, des exemples concrets et sans termes trop compliqués.
-                        Question de l'élève : ${question}`
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 4096
-                }
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erreur ${response.status} : ${errorText || 'Réponse vide'}`);
+            MathJax.typesetPromise([div]).catch(err => console.log("MathJax erreur:", err));
         }
 
-        const data = await response.json();
-        const reponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse reçue";
+        async function envoyerQuestion() {
+            const input = document.getElementById("question");
+            const question = input.value.trim();
 
-        document.getElementById("chat").lastChild.remove();
-        ajouterMessage(reponse, "assistant");
+            if (!question) return;
 
-    } catch (error) {
-        document.getElementById("chat").lastChild.remove();
-        ajouterMessage(
-            `Désolé, il y a eu un problème : ${error.message}<br><br>` +
-            `Essaie de recharger la page ou vérifie ta connexion.<br>` +
-            `(Détails : ${error})`, 
-            "assistant"
-        );
-    }
-}
+            ajouterMessage(question, "user");
+            input.value = "";
 
-// Envoi avec la touche Entrée
-document.getElementById("question").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") envoyerQuestion();
-});
+            ajouterMessage("L'IA réfléchit...", "assistant");
+
+            try {
+                const response = await fetch(GROQ_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${GROQ_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            {
+                                role: "system",
+                                content: `Tu es un prof très patient et pédagogue pour élèves de Terminale Bac Pro MELEC (niveau faible). 
+                        Explique TOUJOURS très lentement, étape par étape, avec beaucoup d'exemples simples et concrets. 
+                        Utilise **gras** pour les idées importantes, *italique* pour les exemples, et $...$ ou $$...$$ pour les formules mathématiques. 
+                        Fais des réponses complètes, détaillées et progressives.`
+                            },
+                            { role: "user", content: question }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 2048
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erreur ${response.status} : ${errorData.error?.message || 'Réponse vide'}`);
+                }
+
+                const data = await response.json();
+                const reponse = data.choices[0].message.content;
+
+                document.getElementById("chat").lastChild.remove();
+                ajouterMessage(reponse, "assistant");
+
+            } catch (error) {
+                document.getElementById("chat").lastChild.remove();
+                ajouterMessage(
+                    `Désolé, il y a eu un problème : ${error.message}<br><br>` +
+                    `Vérifie ta clé Groq et ta connexion internet.`,
+                    "assistant"
+                );
+            }
+        }
+
+        // Envoi avec la touche Entrée
+        document.getElementById("question").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") envoyerQuestion();
+        });
+
         // ==============================================
         // DESMOS (inchangé)
         // ==============================================
@@ -436,8 +480,4 @@ document.getElementById("question").addEventListener("keypress", function(e) {
 
 </body>
 
-
 </html>
-
-
-
